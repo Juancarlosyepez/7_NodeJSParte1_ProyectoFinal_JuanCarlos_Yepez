@@ -1,0 +1,64 @@
+{% extends 'layout.html' %}
+
+{% block navegador %}
+           
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto" >
+              	<li class="nav-item active">
+                  <a class="nav-link" href="/user"><i class="fas fa-home"></i>Home</a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="/gallery"><i class="fas fa-images"></i>My Gallery</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/new"><i class="fas fa-file-upload"></i>Upload Image</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/user"><i class="fas fa-sign-out-alt"></i>Go Back</a>
+                </li>
+              </ul>
+            </div>
+    
+  {% endblock %}	
+
+
+{% block form %}
+
+	<div  class="container" >
+		<h1>Mis Imagenes</h1>
+		{% for imagen in imagenes %}
+		<div class="gallery tr">
+			<div class="row ">
+				<div  class="col-md-10 ">
+					<h2 class="margin-left" > {{imagen.titulo}} </h2>
+					<img  class="margin-left" width="100" src="/imagenes/temp{{imagen.id}}.{{imagen.extension}}">
+				</div>
+				<div class="col-md-2"> 
+					<a href="/edit/{{imagen.id}}" class="right-space btn btn-dark">Cargar Imagen</a>
+					<form action="/delete/{{imagen.id}}?_method=DELETE" class="link" method="POST">
+						<input id="delete" type="submit" value="Eliminar" class="btn btn-danger" style="width: 130px;" >
+					</form>
+					
+				</div>
+				
+			</div>
+		</div>
+		{% endfor%} 
+	</div>
+	
+	
+{% endblock %}
+
+{% block script%}
+	<script >
+		document.getElementById('delete')
+		.addEventListener('click', function(e){
+			  response = confirm('Estas Seguro de Eliminar?');
+			if(!response){
+				e.preventDefault();
+			}
+		})
+	</script>
+
+{% endblock %}
+

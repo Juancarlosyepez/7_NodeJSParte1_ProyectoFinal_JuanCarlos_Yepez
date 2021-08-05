@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+
+
+{% block navegador %}
+<div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto" >
+                <li class="nav-item active">
+                  <a class="nav-link" href="/"><i class="fas fa-home"></i>Home </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/#about"><i class="fas fa-building"></i>About</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i>Login</a>
+                </li>
+           </ul>
+</div>
+
+ {% endblock %}
+
+
+{% block titulo %}
+<div id="efecto" class="container">
+  	<header class="row">
+  		<div  class="col-lg-12 text-center">
+  			<span  class="jiterry animated bounceIn">HELLO!....I_AM_ASIMULATOR_OFDRAWING__ANDEDITING</span>
+  		</div>
+  	</header>
+  </div>
+ {% endblock %}
+
+  {% block about %}
+  <div class="container-fluid" id="about">
+  		<div class="row bg-dark text-white p-5 text-center">
+  			<div class="col-sm-6">
+  				<i> <img src="/img/nodeJS-icon.png" width="250" height="250" class="animated bounceIn" alt="Pews-Logo"></i>
+  			</div>
+  			<div class="col-sm-6">
+  				<h3>Examen Final de NodeJS Parte 1</h3>
+  				<p>NodeJS es una plataforma de software para crear aplicaciones entre cliente-servidor y servidor-servidor. Adicionalmente, es una plataforma que se instala en el Sistema Operativo y ejecuta su funcionalidad desde la máquina.
+
+La finalidad de la aplicación es simular el dibujo y edición de imágenes en tiempo real con más de un usuario haciendo uso deExpressJS; MongoDB y MongooseJS para la gestión de usuarios; Redis y PassportJS para el proceso de login; y finalmente implementar el concepto de Socket.IO para la edición en tiempo real de las imágenes. </p>
+  			</div>
+  		</div>
+  </div>
+  {% endblock %}
+
+  

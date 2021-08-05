@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block titulo %}
+
+  
+{% endblock %}
+
+  {% block navegador %}
+           
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto" >
+              	<li class="nav-item active">
+                  <a class="nav-link" href="/user"><i class="fas fa-home"></i>Home</a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="/gallery"><i class="fas fa-images"></i>My Gallery</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/new"><i class="fas fa-file-upload"></i>Upload Image</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/salir"><i class="fas fa-sign-out-alt"></i>Logout</a>
+                </li>
+              </ul>
+            </div>
+    
+  {% endblock %}	
+
+  {% block form %}
+	  
+		  {% for imagen in imagenes %}
+
+			<div class="img-container">
+				<h2>{{imagen.titulo}}</h2>
+				<img  src="/imagenes/temp{{imagen.id}}.{{imagen.extension}}">
+					
+				<p>La imagen fue subido por: {{imagen.creator.nombre}}</p>
+			</div>
+
+		   {% endfor%}  
+	    
+  {% endblock %}

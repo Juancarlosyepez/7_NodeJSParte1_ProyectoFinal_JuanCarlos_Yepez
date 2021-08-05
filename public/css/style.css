@@ -1,0 +1,70 @@
+body{
+
+	background: #4B79A1;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #283E51, #4B79A1);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #283E51, #4B79A1); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+}
+
+#efecto{font:400 110px/1em cursive;
+	text-align:center;padding:60px;
+	text-shadow:5px 10px #2A2C40;
+}
+.jiterry span{animation:jitter 200ms linear infinite;color:#28B463;display:inline-block}
+@keyframes jitter{ 50%{transform:skewY(1.7deg) skewX(-1.7deg) scale(1.046);} }
+
+
+.gallery{
+
+	background-color: white;
+	border: solid 2px #eee;
+}
+
+.tr:nth-of-type(odd){
+	background-color: #eee
+}
+
+.right-space{
+	margin-right:0em;
+
+
+}
+.margin-left{
+	margin-left: 1em;
+}
+
+form.link{
+	display: inline-block;
+}
+
+form.link input[type="submit"]{
+	
+	border: none; 
+
+}
+
+img{
+	max-width: 100%;
+}
+
+.img-container{
+	width:700px;
+	max-width: 100%;
+	margin: 0 auto;
+}
+
+.img-container h2{
+	padding: 15px;
+	border-bottom: 1px solid #222;
+}
+
+.img-container p{
+	text-align: right;
+	font-size: 1.2em;
+	margin-top: 1em;
+}
+
+.h3{
+	font-size: .8em;
+}
+

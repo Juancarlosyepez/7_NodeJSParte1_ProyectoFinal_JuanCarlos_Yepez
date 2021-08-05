@@ -1,0 +1,235 @@
+{% extends 'layout.html' %}
+
+{% block head %}
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+ <script src="/socket.io/socket.io.js"></script>
+<style >
+	#drawing {
+			display: block;
+			margin: 0 auto;
+			border : solid 1px;
+			background-color: #eee;
+			
+		}
+	.herramientas td div{
+		background-color: black;
+		border-width: solid 2px;
+		border-radius:  10px;
+
+	}
+	.herramientas td div:hover{
+		background-color: black;
+		border: solid red 1px;
+		border-radius:  10px;
+
+	}
+	.herramientas td {
+		padding: 10px;
+		width:  25px;
+		align-items:  center;
+		align-content: center;
+		border-radius: 5px
+		border-width:25px;
+
+	}
+	#guardarCanvas{
+		width: 200px;
+	}
+	.tabla{
+		margin: 0 auto;
+	}
+	.h3{
+		font-size: .8em;
+	}
+		
+</style>
+
+
+    {% endblock %}
+
+  {% block navegador %}
+           
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav ml-auto" >
+              	<li class="nav-item active">
+                  <a class="nav-link" href="/user"><i class="fas fa-home"></i>Home</a>
+                </li>
+                <li class="nav-item ">
+                  <a class="nav-link" href="/gallery"><i class="fas fa-images"></i>My Gallery</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/new"><i class="fas fa-file-upload"></i>Upload Image</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/gallery"><i class="fas fa-sign-out-alt"></i>Go Back</a>
+                </li>
+              </ul>
+            </div>
+    
+  {% endblock %}	
+
+ {% block form %}
+ 
+
+  <canvas id="drawing" width="1100" height="650" ></canvas><br/>
+  <div class="tabla">
+  	<table>
+  		
+  		<tr class="herramientas">
+  			<td><a class="btn btn-light" onclick="stamano(2);"><div style="width: 5px; height: 5px;" ></div></a></td>
+			<td><a class="btn btn-light" onclick="stamano(4);"><div style="width: 7px; height: 7px;" ></div></a></td>
+			<td><a class="btn btn-light" onclick="stamano(6);"><div style="width: 9px; height: 9px;" ></div></td>
+			<td><a class="btn btn-light" onclick="stamano(9);"><div style="width: 11px; height: 11px;" ></div></td>
+			<td><a class="btn btn-light" onclick="stamano(12);"><div style="width: 13px; height: 13px;" ></div></td>
+			<td><a class="btn btn-light" onclick="stamano(15);"><div style="width: 14px; height: 14px;" ></div></td>
+			<td><a class="btn btn-light" onclick="stamano(18);"><div style="width: 16px; height: 16px;"></div></td>
+			<td><a class="btn btn-light" onclick="stamano(21);"><div style="width: 19px; height: 19px;" ></div></td>
+			<td><a class="btn btn-light" onclick="stamano(24);"><div style="width: 21px; height: 21px;" ></div></td>
+			<td><input type="color" id="colores" /></td>
+  			<td><input class="right-space btn btn-dark" type="file" id="imagefile" value="Cargar Imagen"></td>
+  			<td><a class="right-space btn btn-dark" href="#" id="guardarCanvas"  download="temp{{imagen.id}}.png" onclick="guardarImg();">Guardar Imagen</a></td>
+  		</tr>
+  	</table>
+  </div>
+  <div class="col-md-4">
+  	<div class="panel panel-primary btn btn-dark">
+  		<div class="panel-heading ">Usuarios en Linea</div>
+  		<div class="panel-body btn btn-light">
+  			<ul class="media-list" id="cuerpo-online"></ul>
+  		</div>
+  	</div>
+  </div>
+
+  {% endblock %}
+
+{% block script%}
+<script >
+	
+	var tamaño="";
+	var urlImg="";
+	function stamano(numero){tamaño = numero;};
+	
+	function guardarImg(){
+
+		var canvas = document.getElementById("drawing");
+		var imagen = canvas.toDataURL();
+		this.href=imagen;
+		urlImg=imagen;
+	};
+
+	document.getElementById("guardarCanvas").addEventListener("click",guardarImg,false);
+//------------------------------------------------------------------------
+	function init(){
+
+		var socket=io();
+
+	let mouse = {
+		click: false,
+		move:false,
+		pos: {x: 0, y:0},
+		pos_prev:false
+	};
+
+	var canvas = document.getElementById('drawing');
+	var context = canvas.getContext('2d');
+	var img = "/imagenes/temp{{imagen.id}}.{{imagen.extension}}";
+	var usuario = "{{user.usuario}}";
+	var imagen=new Image();
+	imagen.src = img;
+		imagen.onload = function(){
+			context.drawImage(imagen,0,0);
+			var img = canvas.toDataURL();
+			 socket.emit('new user image',img);
+			}
+
+		socket.emit('new user', usuario);
+
+		socket.on('new user', function(usuarios){
+			$('#cuerpo-online').html('');
+			$.each(usuarios, function(i, usuario){
+				$('#cuerpo-online').append($('<li>').text(usuario));
+				console.log("NUEVO USUARIO CONECTAD: "+usuario);
+			});
+		});
+			
+
+		socket.on('addImg',function(base64image){
+			console.log("URL IMG "+base64image);
+			var imagen=new Image();
+			imagen.src = base64image;
+			imagen.onload = function(){
+			context.drawImage(imagen,0,0);
+			}
+		});
+			
+
+		socket.on('addimage',function(base64image){
+			var imagen=new Image();
+			imagen.src = base64image;
+			imagen.onload = function(){
+			context.drawImage(imagen,0,0);
+			}
+		console.log('IAMGEN base64image RECIBIDO '+base64image)
+		});
+
+	$(function(){
+		$('#imagefile').on('change',function(e){	
+			var file = e.originalEvent.target.files[0];
+			//console.log('IMAGEN  '+file);
+			var reader = new FileReader();
+			reader.onload = function(evt){
+				socket.emit('user image',evt.target.result);
+				//console.log("IMG "+ evt.target.result);
+			};
+			 reader.readAsDataURL(file);
+		});
+	});
+
+
+	canvas.addEventListener('mousedown',function(e){
+		mouse.click = true;
+	});
+
+	canvas.addEventListener('mouseup', function(e){
+		mouse.click = false;
+	});
+
+	canvas.addEventListener('mousemove', function(e,tamaño){
+		mouse.pos.x = (e.clientX-this.offsetLeft);
+		mouse.pos.y = (e.clientY-this.offsetTop);
+		mouse.move = true;	
+	});
+
+
+	socket.on('draw_img',function(data){
+		var color = data.color
+		var tamaño = data.size;
+		var line = data.line;
+		context.beginPath();
+		context.strokeStyle = color;
+		context.lineWidth = tamaño;
+		context.moveTo(line[0].x, line[0].y);
+		context.lineTo(line[1].x, line[1].y);
+		context.stroke();
+	});
+
+
+	function mainLoop(){
+		if(mouse.click && mouse.move && mouse.pos_prev){
+				socket.emit('draw_img',{
+					line:[mouse.pos, mouse.pos_prev],
+					color:document.getElementById("colores").value,
+					size:tamaño
+				});
+			mouse.move = false;
+			//console.log("tamaño de trazo "+tamaño);
+		}
+		mouse.pos_prev = {x: mouse.pos.x, y:mouse.pos.y};
+		setTimeout(mainLoop, 25);
+	}
+	mainLoop();
+}
+
+document.addEventListener('DOMContentLoaded', init)
+</script>
+    {% endblock %}
